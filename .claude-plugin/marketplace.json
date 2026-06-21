@@ -1,0 +1,12 @@
+{
+  "name": "rector-labs",
+  "owner": { "name": "RECTOR-LABS" },
+  "description": "Solana security skills for Claude Code by RECTOR-LABS (find -> prove -> respond).",
+  "plugins": [
+    {
+      "name": "solana-cpi-safety",
+      "source": { "source": "github", "repo": "RECTOR-LABS/solana-cpi-safety-skill" },
+      "description": "Detect and prevent four Solana CPI vulnerability classes: return-data spoofing, arbitrary CPI, stale-account-after-CPI, and non-canonical PDA signing."
+    }
+  ]
+}

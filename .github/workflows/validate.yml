@@ -1,0 +1,29 @@
+name: Validate marketplace
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate .claude-plugin/marketplace.json
+        run: |
+          node -e '
+            const fs = require("fs");
+            const m = JSON.parse(fs.readFileSync(".claude-plugin/marketplace.json", "utf8"));
+            if (typeof m.name !== "string") throw new Error("marketplace.name missing");
+            if (!m.owner || typeof m.owner.name !== "string") throw new Error("marketplace.owner.name missing");
+            if (!Array.isArray(m.plugins) || m.plugins.length === 0) throw new Error("plugins[] empty");
+            for (const p of m.plugins) {
+              if (typeof p.name !== "string") throw new Error("a plugin entry is missing name");
+              if (!p.source) throw new Error("plugin " + p.name + " missing source");
+            }
+            console.log("marketplace.json valid:", m.name, "plugins:", m.plugins.map(function (p) { return p.name; }).join(", "));
+          '
